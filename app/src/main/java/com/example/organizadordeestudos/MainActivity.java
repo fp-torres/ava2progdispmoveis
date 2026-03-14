@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         tvEmptyState = findViewById(R.id.tvEmptyState);
         recyclerViewEstudos = findViewById(R.id.recyclerViewEstudos);
 
-        // Configuração do RecyclerView
         recyclerViewEstudos.setLayoutManager(new LinearLayoutManager(this));
 
         btnAddActivity.setOnClickListener(v -> {
@@ -68,8 +70,21 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onDeleteClick(Estudo estudo) {
-                        dbHelper.deletarEstudo(estudo.getId());
-                        carregarLista(); // Atualiza a tela imediatamente
+                        // Implementação do Alerta de Confirmação
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Excluir Atividade")
+                                .setMessage("Tem certeza que deseja apagar a disciplina '" + estudo.getDisciplina() + "'?")
+                                .setPositiveButton("Sim", (dialog, which) -> {
+                                    dbHelper.deletarEstudo(estudo.getId());
+                                    carregarLista(); // Atualiza a tela imediatamente
+
+                                    // Feedback visual de sucesso na exclusão
+                                    Snackbar.make(findViewById(android.R.id.content), "Atividade excluída com sucesso!", Snackbar.LENGTH_SHORT)
+                                            .setBackgroundTint(ContextCompat.getColor(MainActivity.this, R.color.black))
+                                            .show();
+                                })
+                                .setNegativeButton("Não", null) // Não faz nada, apenas fecha o popup
+                                .show();
                     }
                 });
                 recyclerViewEstudos.setAdapter(adapter);
