@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_app">#121212</color>
+    <color name="text_primary">#E0E0E0</color>
+    <color name="edit_text_line">#BB86FC</color>
+
+    <color name="item_bg">#1E1E1E</color>
+</resources>
